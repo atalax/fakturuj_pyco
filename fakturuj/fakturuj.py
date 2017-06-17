@@ -89,6 +89,8 @@ def main():
                         help='vlastni jinja2 template na generovani faktury.')
     parser.add_argument('-i', '--info_file', help='soubor z informacema o tobe',
                         default='./me.json')
+    parser.add_argument('-f', '--force-overwrite', help='proste to prepis',
+                        action="store_true")
 
     args = parser.parse_args()
 
@@ -116,6 +118,9 @@ def main():
         output_file = os.path.splitext(args.json_file)[0] + '.pdf'
     else:
         output_file = args.output
+
+    if os.path.exists(output_file) and not args.force_overwrite:
+        fuckem("Uz existuje, posrals to.")
 
     invoice_data = clean_invoice_data(load_data(args.json_file))
 
