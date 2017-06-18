@@ -91,6 +91,7 @@ def main():
                         default='./me.json')
     parser.add_argument('-f', '--force-overwrite', help='proste to prepis',
                         action="store_true")
+    parser.add_argument('--html', help='html dump')
 
     args = parser.parse_args()
 
@@ -124,7 +125,19 @@ def main():
 
     invoice_data = clean_invoice_data(load_data(args.json_file))
 
-    html_content = render_template(invoice_data, info, filename=args.template)
+    template_file = args.template
+    if not template_file:
+        local_template = os.path.join(os.path.dirname(args.json_file),
+                                      'template.html')
+        if os.path.exists(local_template):
+            template_file = local_template
+
+    html_content = render_template(invoice_data, info, filename=template_file)
+
+    if args.html:
+        with open(args.html, 'w') as f:
+            f.write(html_content)
+
     pdfkit.from_string(html_content, output_path=output_file)
 
 
