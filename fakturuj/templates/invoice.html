@@ -1,213 +1,231 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>{{ title }}</title>
-     <!--
-        Original template from https://github.com/NextStepWebs/simple-html-invoice-template
-     -->
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>
+body {
+  padding: 1cm 1.5cm 1cm 1.5cm;
+  font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+  font-size: 110%;
+  color: #222;
+}
 
-    <style>
-    .invoice-box{
-        max-width:800px;
-        margin:auto;
-        padding:30px;
-        /*border:1px solid #eee;*/
-        /*box-shadow:0 0 10px rgba(0, 0, 0, .15);*/
-        font-size:16px;
-        line-height:24px;
-        font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-        color:#555;
-    }
+table {
+  width: 100%;
+}
 
-    .invoice-box table{
-        width:100%;
-        line-height:inherit;
-        text-align:left;
-    }
+.dates {
+  font-size: 80%;
+  text-align: right;
+}
 
-    .invoice-box table td{
-        padding:5px;
-        vertical-align:top;
-    }
+#heading {
+  font-size: 110%;
+}
 
-    .invoice-box table tr td:nth-child(2){
-        text-align:right;
-    }
+#heading .dates {
+  font-size: 110%;
+  line-height: 1.4;
+}
 
-    .invoice-box table tr.top table td{
-        padding-bottom:20px;
-    }
+#participants tr td:last-child {
+  text-align: right;
+}
 
-    .invoice-box table tr.top table td.title{
-        font-size:45px;
-        line-height:45px;
-        color:#333;
-    }
+h4 {
+  margin-bottom: 0.5em;
+}
 
-    .invoice-box table tr.information table td{
-        padding-bottom:40px;
-    }
+#payment {
+  width: auto;
+  margin-top: 1cm;
+}
 
-    .invoice-box table tr.heading td{
-        background:#eee;
-        border-bottom:1px solid #ddd;
-        font-weight:bold;
-    }
+#payment td:first-child {
+  padding-right: 1cm;
+}
 
-    .invoice-box table tr.details td{
-        padding-bottom:20px;
-    }
+#payment td:nth-child(2) {
+  text-align: right;
+}
 
-    .invoice-box table tr.item td{
-        border-bottom:1px solid #eee;
-    }
+#items {
+  margin-top: 2cm;
+}
 
-    .invoice-box table tr.item.last td{
-        border-bottom:none;
-    }
+#items tr td {
+  padding: 2mm 3mm 2mm 3mm;
+}
 
-    .invoice-box table tr.total td:nth-child(2){
-        border-top:2px solid #eee;
-        font-weight:bold;
-    }
+#items thead {
+  background: #dadada;
+  font-weight: bold;
+}
 
-    @media only screen and (max-width: 600px) {
-        .invoice-box table tr.top table td{
-            width:100%;
-            display:block;
-            text-align:center;
-        }
+#items thead td {
+  border-bottom: 2px solid #aaa;
+}
 
-        .invoice-box table tr.information table td{
-            width:100%;
-            display:block;
-            text-align:center;
-        }
-    }
-    </style>
+#items td:not(:first-child) {
+  text-align: right;
+}
+
+#items tr:nth-child(even) {
+  background: #f3f3f3;
+}
+
+#items tr:nth-child(even) td {
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+}
+
+#items #total td {
+  margin-top: 4mm;
+  border-bottom: none;
+  font-weight: bold;
+  text-align: right;
+  background: white;
+}
+
+</style>
 </head>
-
 <body>
-    <div class="invoice-box">
-        <table cellpadding="0" cellspacing="0">
-            <tr class="top">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td class="title">
-                                <!--<img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;">-->
-                                {{ title }}
-                            </td>
-
-                            <td>
-                                Datum vystavení: {{ invoice.date.strftime("%d.%m.%Y") }}<br>
-                                Datum splatnosti: {{ invoice.date_due.strftime("%d.%m.%Y") }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-
-            <tr class="information">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td>
-                                <b>{{ info.personal_data.legal.company_name }}</b><br>
-                                {{ info.personal_data.address.street }}<br>
-                                {{ info.personal_data.address.zip_code }}<br>
-                                {{ info.personal_data.address.city }}<br>
-
-                                <br>
-
-                                IČ: {{ info.personal_data.legal.company_id }}<br>
-                                {% if info.personal_data.legal.company_vat_id %}
-                                    DIČ: {{ info.personal_data.legal.company_vat_id }}<br>
-                                {% else %}
-                                    Neplátce DPH <br>
-                                {% endif %}
-
-                                <br>
-                                
-                                {% if invoice.order_no %}
-                                    Číslo objednávky: {{ invoice.order_no }}
-                                {% endif %}
-
-                            </td>
-
-                            <td>
-                                <b>{{ invoice.company_data.legal.company_name }}</b><br>
-                                {{ invoice.company_data.address.street }}<br>
-                                {{ invoice.company_data.address.zip_code }}<br>
-                                {{ invoice.company_data.address.city }}<br>
-
-                                <br>
-
-                                IČ: {{ invoice.company_data.legal.company_id }}<br>
-                                {% if invoice.company_data.legal.company_vat_id %}
-                                    DIČ: {{ invoice.company_data.legal.company_vat_id }}<br>
-                                {% else %}
-                                    Neplátce DPH <br>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-
-            <tr class="heading">
-                <td>
-                    Bankovní účet
-                </td>
-
-                <td>
-                    Variabilní symbol
-                </td>
-
-
-            </tr>
-
-            <tr class="details">
-                <td>
-                    {{ info.account }}
-                </td>
-
-                <td>
-                    {{ transaction_id }}
-                </td>
-            </tr>
-
-            <tr class="heading">
-                <td>
-                    Položka
-                </td>
-
-                <td>
-                    Cena
-                </td>
-            </tr>
-
-            {% for item in invoice.item_list %}
-                <tr class="item {% if loop.last %}last{% endif %}">
-                    <td>
-                        {{ item.title }}
-                    </td>
-
-                    <td>
-						{{ space_number(item.cost * item.amount) }} {{ currency }}
-                    </td>
-                </tr>
-            {% endfor %}
-
-            <tr class="total">
-                <td></td>
-
-                <td>
-                   {{ space_number(sum_total) }} {{ currency }}
-                </td>
-            </tr>
-        </table>
-    </div>
+  <table id="heading">
+    <tr>
+      <td><h1>{{ title }}</h1></td>
+      <td class="dates">
+        Datum vystavení:<br>
+        Datum splatnosti:{% if invoice.order_no %}<br>Číslo objednávky:{% endif %}
+      </td>
+      <td class="dates">
+        {{ invoice.date.strftime("%d.%m.%Y") }}<br>
+        {{ invoice.date_due.strftime("%d.%m.%Y") }}{% if invoice.order_no %}<br>{{ invoice.order_no }}{% endif %}
+      </td>
+    </tr>
+  </table cellspacing=0>
+  <table id="participants">
+    <tr>
+      <td>
+        <h4>Dodavatel</h4>
+      </td>
+      <td>
+        <h4>Odběratel</h4>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {{ info.personal_data.legal.company_name }}
+      </td>
+      <td>
+        {{ invoice.company_data.legal.company_name }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {{ info.personal_data.address.street }}
+      </td>
+      <td>
+        {{ invoice.company_data.address.street }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {{ info.personal_data.address.zip_code }}
+      </td>
+      <td>
+        {{ invoice.company_data.address.zip_code }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {{ info.personal_data.address.city }}
+      </td>
+      <td>
+        {{ invoice.company_data.address.city }}
+      </td>
+    </tr>
+    <tr style="height: 1eX;"></tr>
+    <tr>
+      <td>
+        IČ: {{ info.personal_data.legal.company_id }}
+      </td>
+      <td>
+        IČ: {{ invoice.company_data.legal.company_id }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {% if info.personal_data.legal.company_vat_id %}
+          DIČ: {{ info.personal_data.legal.company_vat_id }}
+        {% else %}
+          Neplátce DPH
+        {% endif %}
+      </td>
+      <td>
+        {% if invoice.company_data.legal.company_vat_id %}
+          DIČ: {{ invoice.company_data.legal.company_vat_id }}
+        {% else %}
+          Neplátce DPH
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  <table id="payment">
+    <tr>
+      <td>
+        <h4>Platba</h4>
+      </td>
+    </tr>
+    <tr>
+      <td>Bankovní účet</td>
+      <td>{{ info.account }}</td>
+    </tr>
+    <tr>
+      <td>Variabilní symbol</td>
+      <td>{{ transaction_id }}</td>
+    </tr>
+  </table>
+  <table id="items">
+    <thead>
+      <tr>
+        <td>Položka</td>
+        {% if invoice.show_amounts %}
+          <td>Počet</td>
+          <td>Cena za kus</td>
+        {% endif %}
+        <td>Cena {% if invoice.show_amounts %} celkem {% endif %}</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in invoice.item_list %}
+        <tr>
+          <td>
+            {{ item.title }}
+          </td>
+          {% if invoice.show_amounts %}
+            <td>
+              {{ item.amount }}
+            </td>
+            <td>
+              {{ space_number(item.cost) }} {{ currency }}
+            </td>
+          {% endif %}
+            <td>
+              {{ space_number(item.cost * item.amount) }} {{ currency }}
+            </td>
+        </tr>
+      {% endfor %}
+      <tr id="total">
+        {% if invoice.show_amounts %}
+          <td colspan="4">
+        {% else %}
+          <td colspan="2">
+        {% endif %}
+          {{ space_number(sum_total) }} {{ currency }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>
